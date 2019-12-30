@@ -16,7 +16,7 @@ public class MetricBucket {
     /**
      * 这段事件内的最小耗时
      */
-    private volatile long minRt;
+    private volatile long minRt = Integer.MIN_VALUE;
 
     public MetricBucket() {
         // 初始化数组
