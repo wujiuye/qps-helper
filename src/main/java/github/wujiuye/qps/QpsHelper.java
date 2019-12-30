@@ -145,4 +145,13 @@ public class QpsHelper {
         return rollingCounterInSecond.success() / rollingCounterInSecond.getWindowIntervalInSec();
     }
 
+    /**
+     * 获取1分钟的统计
+     *
+     * @return
+     */
+    public MetricBucket[] bucketsInMinute() {
+        return rollingCounterInMinute.buckets();
+    }
+
 }

@@ -170,6 +170,13 @@ public abstract class LeapArray<T> {
     }
 
 
+    /**
+     * return time > start + intervalInMs(1分钟)
+     *
+     * @param time
+     * @param windowWrap
+     * @return
+     */
     public boolean isWindowDeprecated(long time, WindowWrap<T> windowWrap) {
         return time - windowWrap.windowStart() > intervalInMs;
     }
