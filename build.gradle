@@ -1,16 +1,96 @@
 plugins {
     id 'java'
+    // maven 发布插件
+    id 'maven-publish'
+    // 签名插件
+    id 'signing'
 }
 
-group 'github.wujiuye'
-version '1.0.0'
-
-sourceCompatibility = 1.8
+group 'com.github.wujiuye'
+version '1.1.0-RELEASE'
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
+
+// 打包源码
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+}
+
+// 生成 javadoc jar
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+publishing {
+    publications {
+        // 推送
+        publishMyProject(MavenPublication) {
+            // 编译jar包
+            from components.java
+            // 打包源码
+            artifact sourcesJar
+            // javadoc
+            artifact javadocJar
+
+            pom {
+                name = "qps-helper"
+                description = "通用的qps统计工具包，为项目中一些框架实现QPS限流提供支持，为项目中统计接口的QPS提供支持"
+                url = "https://github.com/wujiuye/qps-helper"
+                licenses {
+                    license {
+                        name = "The Apache License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
+                }
+                developers {
+                    developer {
+                        id = "wujiuye"
+                        name = "wujiuye"
+                        email = "419611821@qq.com"
+                    }
+                }
+                scm {
+                    connection = "scm:git:https://github.com/wujiuye/qps-helper.git"
+                    developerConnection = "scm:git:https://github.com/wujiuye/qps-helper.git"
+                    url = "https://github.com/wujiuye/qps-helper"
+                }
+            }
+        }
+    }
+    // 到 https://oss.sonatype.org/#nexus-search; 搜索是否上传成功
+    repositories {
+        // 发布Release版本可在版本号后面带上'-RELEASE'，也可不带
+        maven {
+            name 'Release'
+            url 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+            credentials {
+                username = "${NEXUS_USERNAME}"
+                password = "${NEXUS_PASSWORD}"
+            }
+        }
+        // 发布Snapshot快照版本必须在版本号后面加上'-SNAPSHOT'
+        maven {
+            name = 'Snapshot'
+            url = 'https://oss.sonatype.org/content/repositories/snapshots'
+            credentials {
+                username = "${NEXUS_USERNAME}"
+                password = "${NEXUS_PASSWORD}"
+            }
+        }
+    }
+}
+
+// 必须在 publishing 配置之后
+signing {
+    sign publishing.publications.publishMyProject
+}
+
