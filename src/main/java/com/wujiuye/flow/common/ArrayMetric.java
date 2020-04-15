@@ -1,4 +1,4 @@
-package github.wujiuye.qps;
+package com.wujiuye.flow.common;
 
 import java.util.List;
 
@@ -17,7 +17,8 @@ public class ArrayMetric implements Metric {
 
     @Override
     public long success() {
-        data.currentWindow(); // 确保当前时间的bucket不为空
+        // 确保当前时间的bucket不为空
+        data.currentWindow();
         long success = 0;
         List<MetricBucket> list = data.values();
         for (MetricBucket window : list) {
@@ -28,7 +29,8 @@ public class ArrayMetric implements Metric {
 
     @Override
     public long exception() {
-        data.currentWindow();  // 确保当前时间的bucket不为空
+        // 确保当前时间的bucket不为空
+        data.currentWindow();
         long exception = 0;
         List<MetricBucket> list = data.values();
         for (MetricBucket window : list) {
@@ -39,7 +41,8 @@ public class ArrayMetric implements Metric {
 
     @Override
     public long rt() {
-        data.currentWindow();  // 确保当前时间的bucket不为空
+        // 确保当前时间的bucket不为空
+        data.currentWindow();
         long rt = 0;
         List<MetricBucket> list = data.values();
         for (MetricBucket window : list) {
@@ -50,11 +53,12 @@ public class ArrayMetric implements Metric {
 
     @Override
     public long minRt() {
-        data.currentWindow();  // 确保当前时间的bucket不为空
+        // 确保当前时间的bucket不为空
+        data.currentWindow();
         long rt = 0;
         List<MetricBucket> list = data.values();
         for (MetricBucket window : list) {
-            if (window.minRt() < rt) {
+            if (window.minRt() < rt || rt == 0) {
                 rt = window.minRt();
             }
         }
@@ -62,9 +66,29 @@ public class ArrayMetric implements Metric {
     }
 
     @Override
+    public long maxRt() {
+        // 确保当前时间的bucket不为空
+        data.currentWindow();
+        long rt = 0;
+        List<MetricBucket> list = data.values();
+        for (MetricBucket window : list) {
+            if (window.maxRt() > rt) {
+                rt = window.maxRt();
+            }
+        }
+        return Math.max(1, rt);
+    }
+
+    @Override
     public MetricBucket[] buckets() {
-        data.currentWindow();  // 确保当前时间的bucket不为空
+        // 确保当前时间的bucket不为空
+        data.currentWindow();
         return data.values().toArray(new MetricBucket[0]);
+    }
+
+    @Override
+    public List<WindowWrap<MetricBucket>> windows() {
+        return data.list();
     }
 
     @Override
@@ -80,9 +104,9 @@ public class ArrayMetric implements Metric {
     }
 
     @Override
-    public void addRT(long rt) {
+    public void addRt(long rt) {
         WindowWrap<MetricBucket> wrap = data.currentWindow();
-        wrap.value().addRT(rt);
+        wrap.value().addRt(rt);
     }
 
     /**
@@ -92,7 +116,8 @@ public class ArrayMetric implements Metric {
      * @return 总的计数
      */
     public long getSum(MetricEvent event) {
-        data.currentWindow();  // 确保当前时间的bucket不为空
+        // 确保当前时间的bucket不为空
+        data.currentWindow();
         long sum = 0;
         List<MetricBucket> buckets = data.values();
         for (MetricBucket bucket : buckets) {
@@ -101,19 +126,9 @@ public class ArrayMetric implements Metric {
         return sum;
     }
 
-    /**
-     * 获取某个事件平均计数
-     *
-     * @param event 要计算的事件
-     * @return 平均值（每秒平均数）
-     */
-    public double getAvg(MetricEvent event) {
-        return getSum(event) / data.getIntervalInSecond();
-    }
-
     @Override
-    public double getWindowIntervalInSec() {
-        return data.getIntervalInSecond();
+    public long getWindowInterval() {
+        return data.getIntervalInMs();
     }
 
     @Override

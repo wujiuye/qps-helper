@@ -1,4 +1,6 @@
-package github.wujiuye.qps;
+package com.wujiuye.flow.common;
+
+import java.util.List;
 
 /**
  * 度量接口
@@ -28,9 +30,21 @@ public interface Metric {
     long minRt();
 
     /**
+     * 最大响应时间
+     *
+     * @return
+     */
+    long maxRt();
+
+    /**
      * 获取bucket数组
      */
     MetricBucket[] buckets();
+
+    /**
+     * 获取包装的bucket
+     */
+    List<WindowWrap<MetricBucket>> windows();
 
     /**
      * 添加异常数
@@ -49,12 +63,12 @@ public interface Metric {
      *
      * @param rt RT
      */
-    void addRT(long rt);
+    void addRt(long rt);
 
     /**
-     * 获取以秒为单位的滑动窗口长度
+     * 获取以耗秒为单位的滑动窗口长度
      */
-    double getWindowIntervalInSec();
+    long getWindowInterval();
 
     /**
      * 样本总数，统计的bucket数，比如统计1分钟的每秒qps，那么样本数就是60

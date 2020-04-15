@@ -1,4 +1,4 @@
-package github.wujiuye.qps;
+package com.wujiuye.flow.common;
 
 import java.util.concurrent.TimeUnit;
 

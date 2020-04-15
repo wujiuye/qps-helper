@@ -1,5 +1,8 @@
-package github.wujiuye.qps;
+package com.wujiuye.flow.common;
 
+/**
+ * @author wujiuye
+ */
 public class BucketLeapArray extends LeapArray<MetricBucket> {
 
     public BucketLeapArray(int sampleCount, int intervalInMs) {

@@ -1,5 +1,5 @@
 # qps-helper
-从alibaba sentinel中提取的qps统计代码，并修改为通用的qps统计工具包
+通用的qps、tps统计工具包
 
 ### 使用qps-helper统计接口的QPS
 
@@ -9,7 +9,7 @@
 @Slf4j
 public class DemoController {
     
-    private QpsHelper qpsHelper = new QpsHelper();
+    private FlowHelper flowHelper = new FlowHelper(FlowType.HOUR);
 
     @GetMapping("/test")
     public ApiResponse testApi() {
@@ -19,13 +19,139 @@ public class DemoController {
             //    ......
             // 计算耗时
             long rt = TimeUtil.currentTimeMillis() - startTime;
-            qpsHelper.incrSuccess(rt);
+            flowHelper.incrSuccess(rt);
             return ApiResponse.ok();
         }catch (Exception e){
-            qpsHelper.incrException();
+            flowHelper.incrException();
             return ApiResponse.error();
         }
     }
 
+}
+```
+
+### 统计每秒钟
+
+```java
+public class Main{
+    private FlowHelper flowHelper = new FlowHelper(FlowType.Second);
+}
+```
+
+输出最近一秒钟统计
+```java
+public class Main{
+    public static void print(){
+        Flower flower = flowHelper.getFlow(FlowType.Second);
+        System.out.println("总请求数:"+flower.total());
+        System.out.println("成功请求数:"+flower.totalSuccess());
+        System.out.println("异常请求数:"+flower.totalException());
+        System.out.println("平均请求耗时:"+flower.avgRt());
+        System.out.println("最大请求耗时:"+flower.maxRt());
+        System.out.println("最小请求耗时:"+flower.minRt());
+        System.out.println("平均请求成功数(每毫秒):"+flower.successAvg());
+        System.out.println("平均请求异常数(每毫秒):"+flower.exceptionAvg());
+        System.out.println();
+    }
+}
+```
+
+### 统计每分钟
+
+```java
+public class Main{
+    private FlowHelper flowHelper = new FlowHelper(FlowType.Minute);
+}
+```
+
+输出最近一分钟统计
+```java
+public class Main{
+    public static void print(){
+        Flower flower = flowHelper.getFlow(FlowType.Minute);
+        System.out.println("总请求数:"+flower.total());
+        System.out.println("成功请求数:"+flower.totalSuccess());
+        System.out.println("异常请求数:"+flower.totalException());
+        System.out.println("平均请求耗时:"+flower.avgRt());
+        System.out.println("最大请求耗时:"+flower.maxRt());
+        System.out.println("最小请求耗时:"+flower.minRt());
+        System.out.println("平均请求成功数(每秒钟):"+flower.successAvg());
+        System.out.println("平均请求异常数(每秒钟):"+flower.exceptionAvg());
+        System.out.println();
+    }
+}
+```
+
+### 统计每小时
+
+```java
+public class Main{
+    private FlowHelper flowHelper = new FlowHelper(FlowType.HOUR);
+}
+```
+
+输出最近一小时统计
+```java
+public class Main{
+    public static void print(){
+        Flower flower = flowHelper.getFlow(FlowType.HOUR);
+        System.out.println("总请求数:"+flower.total());
+        System.out.println("成功请求数:"+flower.totalSuccess());
+        System.out.println("异常请求数:"+flower.totalException());
+        System.out.println("平均请求耗时:"+flower.avgRt());
+        System.out.println("最大请求耗时:"+flower.maxRt());
+        System.out.println("最小请求耗时:"+flower.minRt());
+        System.out.println("平均请求成功数(每分钟):"+flower.successAvg());
+        System.out.println("平均请求异常数(每分钟):"+flower.exceptionAvg());
+        System.out.println();
+    }
+}
+```
+
+### 组合统计
+
+```java
+public class Main{
+    // 可任意组合
+    private FlowHelper flowHelper = new FlowHelper(FlowType.HOUR,FlowType.Minute,FlowType.Second);
+}
+```
+
+输出最近一小时、一分钟、一毫秒的统计
+```java
+public class Main{
+    public static void print(){
+        // 获取每秒钟统计
+        Flower secondFlower = flowHelper.getFlow(FlowType.Second);
+        // 获取每分钟统计
+        Flower minuteFlower = flowHelper.getFlow(FlowType.Minute);
+        // 获取每小时统计
+        Flower hourFlower = flowHelper.getFlow(FlowType.HOUR);
+    }
+}
+```
+
+### 获取详情
+
+以统计每分钟数据为例
+```java
+public class Main{
+    private FlowHelper flowHelper = new FlowHelper(FlowType.Minute);
+    
+    public static void print(){
+       // 获取每分钟统计
+       Flower flower = flowHelper.getFlow(FlowType.Minute);
+       List<WindowWrap<MetricBucket>> buckets = flower.windows();
+       for (WindowWrap<MetricBucket> bucket : buckets) {
+           System.out.print("开始时间戳：" + bucket.windowStart() + "\t");
+           System.out.print("成功数：" + bucket.value().success() + "\t");
+           System.out.print("失败数：" + bucket.value().exception() + "\t");
+           System.out.print("平均耗时：" + (bucket.value().rt() / bucket.value().success()) + "\t");
+           System.out.print("最大数：" + bucket.value().maxRt() + "\t");
+           System.out.print("最小数：" + bucket.value().minRt() + "\t");
+           System.out.println();
+       }
+       System.out.println();
+    }
 }
 ```

@@ -1,4 +1,4 @@
-package github.wujiuye.qps;
+package com.wujiuye.flow.common;
 
 import java.util.concurrent.atomic.LongAdder;
 
@@ -14,9 +14,13 @@ public class MetricBucket {
      */
     private final LongAdder[] counters;
     /**
-     * 这段事件内的最小耗时
+     * 这段时间内的最小耗时
      */
     private volatile long minRt = Integer.MAX_VALUE;
+    /**
+     * 这段时间内的最大耗时
+     */
+    private volatile long maxRt = Integer.MIN_VALUE;
 
     public MetricBucket() {
         // 初始化数组
@@ -31,16 +35,14 @@ public class MetricBucket {
         return counters[event.ordinal()].sum();
     }
 
-    public MetricBucket add(MetricEvent event, long n) {
+    private void add(MetricEvent event, long n) {
         counters[event.ordinal()].add(n);
-        return this;
     }
 
-    public MetricBucket reset() {
+    public void reset() {
         for (MetricEvent event : MetricEvent.values()) {
             counters[event.ordinal()].reset();
         }
-        return this;
     }
 
     public long exception() {
@@ -51,14 +53,21 @@ public class MetricBucket {
         return minRt;
     }
 
+    public long maxRt() {
+        return maxRt;
+    }
+
     public long rt() {
         return get(MetricEvent.RT);
     }
 
-    public void addRT(long rt) {
+    public void addRt(long rt) {
         add(MetricEvent.RT, rt);
         if (rt < minRt) {
             minRt = rt;
+        }
+        if (rt > maxRt) {
+            maxRt = rt;
         }
     }
 

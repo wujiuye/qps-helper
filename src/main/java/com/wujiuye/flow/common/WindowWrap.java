@@ -1,4 +1,4 @@
-package github.wujiuye.qps;
+package com.wujiuye.flow.common;
 
 /**
  * bucket的包装器实体类
@@ -28,20 +28,12 @@ public class WindowWrap<T> {
         this.value = value;
     }
 
-    public long windowLength() {
-        return windowLengthInMs;
-    }
-
     public long windowStart() {
         return windowStart;
     }
 
     public T value() {
         return value;
-    }
-
-    public void setValue(T value) {
-        this.value = value;
     }
 
     /**

@@ -1,10 +1,14 @@
-package github.wujiuye.qps;
+package com.wujiuye.flow.common;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * @param <T>
+ * @author wujiuye
+ */
 public abstract class LeapArray<T> {
 
     protected int windowLengthInMs;
@@ -149,28 +153,6 @@ public abstract class LeapArray<T> {
     }
 
     /**
-     * Get statistic value from bucket for provided timestamp.
-     *
-     * @param timeMillis a valid timestamp in milliseconds
-     * @return the statistic value if bucket for provided timestamp is up-to-date; otherwise null
-     */
-    public T getWindowValue(long timeMillis) {
-        if (timeMillis < 0) {
-            return null;
-        }
-        int idx = calculateTimeIdx(timeMillis);
-
-        WindowWrap<T> bucket = array.get(idx);
-
-        if (bucket == null || !bucket.isTimeInWindow(timeMillis)) {
-            return null;
-        }
-
-        return bucket.value();
-    }
-
-
-    /**
      * return time > start + intervalInMs(1分钟)
      *
      * @param time
@@ -264,10 +246,6 @@ public abstract class LeapArray<T> {
 
     public int getIntervalInMs() {
         return intervalInMs;
-    }
-
-    public double getIntervalInSecond() {
-        return intervalInMs / 1000.0;
     }
 
 }
