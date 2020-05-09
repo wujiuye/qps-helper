@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'com.github.wujiuye'
-version '1.1.0-RELEASE'
+version '1.1.1-RELEASE'
 
 repositories {
     mavenLocal()
