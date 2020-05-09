@@ -8,7 +8,7 @@ import java.util.List;
 public class FlowTest {
 
     public static void main(String[] args) throws InterruptedException {
-        FlowHelper flowHelper = new FlowHelper(FlowType.Minute);
+        FlowHelper flowHelper = new FlowHelper(FlowType.Second);
         new Thread(() -> {
             while (!Thread.interrupted()) {
                 try {
@@ -21,7 +21,7 @@ public class FlowTest {
         }).start();
         new Thread(() -> {
             while (!Thread.interrupted()) {
-                Flower flower = flowHelper.getFlow(FlowType.Minute);
+                Flower flower = flowHelper.getFlow(FlowType.Second);
                 System.out.println("总请求数:" + flower.total());
                 System.out.println("成功请求数:" + flower.totalSuccess());
                 System.out.println("异常请求数:" + flower.totalException());

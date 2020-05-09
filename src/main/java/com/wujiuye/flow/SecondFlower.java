@@ -18,7 +18,7 @@ public class SecondFlower extends BaseFlower {
 
     @Override
     protected long getWindowInterval(long windowInterval) {
-        return windowInterval;
+        return windowInterval / 1000;
     }
 
 }

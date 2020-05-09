@@ -66,7 +66,7 @@ public interface Metric {
     void addRt(long rt);
 
     /**
-     * 获取以耗秒为单位的滑动窗口长度
+     * 获取以毫秒为单位的滑动窗口长度
      */
     long getWindowInterval();
 
