@@ -1,8 +1,6 @@
 package com.wujiuye.flow;
 
-import com.wujiuye.flow.common.Metric;
-import com.wujiuye.flow.common.MetricBucket;
-import com.wujiuye.flow.common.WindowWrap;
+import com.wujiuye.flow.common.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +15,7 @@ public abstract class BaseFlower implements Flower {
     /**
      * 不做序列化
      */
-    private transient Metric metric;
+    protected transient Metric metric;
 
     public BaseFlower(Metric metric) {
         this.metric = metric;
