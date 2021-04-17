@@ -7,13 +7,20 @@ import java.util.List;
 
 public class FlowTest {
 
+    static {
+        // 初始化指标数据持久化
+        MetricPersistencer.init("/tmp");
+    }
+
     public static void main(String[] args) throws InterruptedException {
-        FlowHelper flowHelper = new FlowHelper(FlowType.Second);
+        FlowHelper flowHelper = new FlowHelper(FlowType.Minute);
+        // 注册需要收集指标数据的Flower
+        MetricPersistencer.registerFlower("test-resource", flowHelper.getFlow(FlowType.Minute));
         new Thread(() -> {
             while (!Thread.interrupted()) {
                 try {
-                    Thread.sleep(20);
-                    flowHelper.incrSuccess(20);
+                    Thread.sleep(1);
+                    flowHelper.incrSuccess(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -21,7 +28,8 @@ public class FlowTest {
         }).start();
         new Thread(() -> {
             while (!Thread.interrupted()) {
-                Flower flower = flowHelper.getFlow(FlowType.Second);
+                System.out.println("======================================================");
+                Flower flower = flowHelper.getFlow(FlowType.Minute);
                 System.out.println("总请求数:" + flower.total());
                 System.out.println("成功请求数:" + flower.totalSuccess());
                 System.out.println("异常请求数:" + flower.totalException());
@@ -31,7 +39,7 @@ public class FlowTest {
                 System.out.println("平均请求成功数:" + flower.successAvg());
                 System.out.println("平均请求异常数:" + flower.exceptionAvg());
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -46,7 +54,7 @@ public class FlowTest {
                     System.out.print("最小数：" + bucket.value().minRt() + "\t");
                     System.out.println();
                 }
-                System.out.println();
+                System.out.println("======================================================");
             }
         }).start();
         Thread.sleep(Integer.MAX_VALUE);

@@ -156,6 +156,21 @@ public class Main{
 }
 ```
 
+### 指标数据持久化
+
+1、在main方法中调用MetricPersistencer的init方法初始化指标数据持久化功能
+```
+MetricPersistencer.init("/tmp");
+```
+* 其中参数为用于存放指标数据文件的目录。
+
+2、给MetricPersistencer注册需要持久化的资源Flower
+```
+MetricPersistencer.registerFlower("test-resource", flowHelper.getFlow(FlowType.Minute));
+```
+* 参数1：资源名称
+* 参数2：Flower，目前仅支持MinuteFlower
+
 ### A&Q
 
 * 1、平均请求数的统计有问题？

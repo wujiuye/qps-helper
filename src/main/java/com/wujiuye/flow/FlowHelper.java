@@ -28,7 +28,8 @@ public class FlowHelper {
         flowMap = new HashMap<>();
         for (FlowType type : types) {
             typeFlag |= type.getFlag();
-            flowMap.put(type, newFlow(type));
+            Flower flower = newFlow(type);
+            flowMap.put(type, flower);
         }
     }
 

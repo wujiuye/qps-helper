@@ -47,6 +47,11 @@ public interface Metric {
     List<WindowWrap<MetricBucket>> windows();
 
     /**
+     * 获取当前时间的所有bucket快照
+     */
+    List<MetricNode> copyCurWindows();
+
+    /**
      * 添加异常数
      */
     void addException(int n);

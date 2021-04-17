@@ -1,5 +1,6 @@
 package com.wujiuye.flow.common;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -89,6 +90,28 @@ public class ArrayMetric implements Metric {
     @Override
     public List<WindowWrap<MetricBucket>> windows() {
         return data.list();
+    }
+
+    @Override
+    public List<MetricNode> copyCurWindows() {
+        List<MetricNode> buckets = new ArrayList<>();
+        data.currentWindow();
+        List<WindowWrap<MetricBucket>> bucketsWindows = windows();
+        for (WindowWrap<MetricBucket> windowWrap : bucketsWindows) {
+            if (windowWrap == null) {
+                continue;
+            }
+            MetricNode newBucket = new MetricNode();
+            newBucket.setTimestamp(windowWrap.windowStart());
+            newBucket.setSuccessCnt(windowWrap.value().success());
+            newBucket.setExceptionCnt(windowWrap.value().exception());
+            newBucket.setAvgRt(windowWrap.value().rt() / windowWrap.value().success());
+            newBucket.setRt(windowWrap.value().rt());
+            newBucket.setMinRt(windowWrap.value().minRt());
+            newBucket.setMaxRt(windowWrap.value().maxRt());
+            buckets.add(newBucket);
+        }
+        return buckets;
     }
 
     @Override

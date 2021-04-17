@@ -13,6 +13,7 @@ out
 logs
 gradlew
 gradlew.bat
+gradle.properties
 
 # Editor directories and files
 .vscode
