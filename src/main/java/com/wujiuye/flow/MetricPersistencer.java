@@ -26,7 +26,12 @@ public class MetricPersistencer {
     private final static ConcurrentMap<Flower, MetricWriter> WRITER_MAP = new ConcurrentHashMap<>();
 
     static {
-        Runtime.getRuntime().addShutdownHook(new Thread(EXECUTOR::shutdownNow));
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                EXECUTOR.shutdown();
+            }
+        }));
     }
 
     static String BASE_DIR = System.getProperty("user.home");
@@ -38,8 +43,14 @@ public class MetricPersistencer {
      */
     public static void init(String baseDir) {
         BASE_DIR = baseDir;
-        EXECUTOR.scheduleWithFixedDelay(() -> METRIC_SAVE_TASK.values().forEach(Runnable::run),
-                0, 1, TimeUnit.SECONDS);
+        EXECUTOR.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                for (Runnable runnable : METRIC_SAVE_TASK.values()) {
+                    runnable.run();
+                }
+            }
+        }, 0, 1, TimeUnit.SECONDS);
     }
 
     /**
@@ -48,24 +59,29 @@ public class MetricPersistencer {
      * @param name   资源名称
      * @param flower Flower
      */
-    public static void registerFlower(String name, Flower flower) {
+    public static void registerFlower(String name, final Flower flower) {
         WRITER_MAP.put(flower, new MetricWriter(BASE_DIR + "/" + name + "/",
                 4096 * 1024, 3));
-        METRIC_SAVE_TASK.put(flower, () -> {
-            Map<Long, MetricNode> metricNodeMap = flower.lastMetrics();
-            Map<Long, List<MetricNode>> map = new HashMap<>();
-            for (MetricNode node : metricNodeMap.values()) {
-                map.computeIfAbsent(node.getTimestamp(), key -> new ArrayList<>());
-                map.get(node.getTimestamp()).add(node);
-            }
-            // save to file
-            map.forEach((key, value) -> {
-                try {
-                    WRITER_MAP.get(flower).write(key, value);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        METRIC_SAVE_TASK.put(flower, new Runnable() {
+            @Override
+            public void run() {
+                Map<Long, MetricNode> metricNodeMap = flower.lastMetrics();
+                Map<Long, List<MetricNode>> map = new HashMap<>();
+                for (MetricNode node : metricNodeMap.values()) {
+                    if (!map.containsKey(node.getTimestamp())) {
+                        map.put(node.getTimestamp(), new ArrayList<MetricNode>());
+                    }
+                    map.get(node.getTimestamp()).add(node);
                 }
-            });
+                // save to file
+                for (Map.Entry<Long, List<MetricNode>> entry : map.entrySet()) {
+                    try {
+                        WRITER_MAP.get(flower).write(entry.getKey(), entry.getValue());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         });
     }
 

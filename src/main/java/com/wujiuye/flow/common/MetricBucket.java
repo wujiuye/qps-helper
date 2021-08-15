@@ -1,7 +1,5 @@
 package com.wujiuye.flow.common;
 
-import java.util.concurrent.atomic.LongAdder;
-
 /**
  * 一段时间内的度量数据
  *

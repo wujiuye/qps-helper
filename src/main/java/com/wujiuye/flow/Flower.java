@@ -31,9 +31,7 @@ public interface Flower {
      *
      * @return
      */
-    default long total() {
-        return totalSuccess() + totalException();
-    }
+     long total();
 
     /**
      * 成功总数

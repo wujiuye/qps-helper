@@ -99,6 +99,11 @@ public abstract class BaseFlower implements Flower {
     }
 
     @Override
+    public long total() {
+        return totalSuccess() + totalException();
+    }
+
+    @Override
     public List<WindowWrap<MetricBucket>> windows() {
         return new ArrayList<>(metric.windows());
     }
