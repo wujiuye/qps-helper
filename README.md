@@ -1,6 +1,28 @@
 # qps-helper
 通用的qps、tps统计工具包
 
+### 添加依赖配置
+
+jdk1.8项目使用此依赖
+```xml
+<!-- https://mvnrepository.com/artifact/com.github.wujiuye/qps-helper -->
+<dependency>
+    <groupId>com.github.wujiuye</groupId>
+    <artifactId>qps-helper</artifactId>
+    <version>1.1.2-RELEASE</version>
+</dependency>
+```
+
+jdk1.7项目使用此依赖
+```xml
+<!-- https://mvnrepository.com/artifact/com.github.wujiuye/qps-helper -->
+<dependency>
+    <groupId>com.github.wujiuye</groupId>
+    <artifactId>qps-helper</artifactId>
+    <version>JDK7.1.1.2-RELEASE</version>
+</dependency>
+```
+
 ### 使用qps-helper统计接口的QPS
 
 ```java
