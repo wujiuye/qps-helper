@@ -50,11 +50,11 @@ public class MetricBucket {
     }
 
     public long minRt() {
-        return minRt;
+        return rt() == 0 ? 0 : minRt;
     }
 
     public long maxRt() {
-        return maxRt;
+        return rt() == 0 ? 0 : maxRt;
     }
 
     public long rt() {
