@@ -1,6 +1,9 @@
 package com.wujiuye.flow;
 
 import com.wujiuye.flow.common.ArrayMetric;
+import com.wujiuye.flow.common.MetricNode;
+
+import java.util.Map;
 
 /**
  * 统计一秒钟的流量
@@ -19,6 +22,11 @@ public class SecondFlower extends BaseFlower {
     @Override
     protected long getWindowInterval(long windowInterval) {
         return windowInterval / 1000;
+    }
+
+    @Override
+    public Map<Long, MetricNode> lastMetrics() {
+        throw new UnsupportedOperationException("不支持，未来也不会支持");
     }
 
 }

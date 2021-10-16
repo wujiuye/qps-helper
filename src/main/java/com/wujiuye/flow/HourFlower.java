@@ -1,6 +1,9 @@
 package com.wujiuye.flow;
 
 import com.wujiuye.flow.common.ArrayMetric;
+import com.wujiuye.flow.common.MetricNode;
+
+import java.util.Map;
 
 
 /**
@@ -22,6 +25,11 @@ public class HourFlower extends BaseFlower {
     protected long getWindowInterval(long windowInterval) {
         // 将毫秒转为分钟（平均每分钟）
         return windowInterval / (60 * 1000L);
+    }
+
+    @Override
+    public Map<Long, MetricNode> lastMetrics() {
+        throw new UnsupportedOperationException("不支持，有需要可以自己实现");
     }
 
 }

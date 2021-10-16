@@ -1,9 +1,11 @@
 package com.wujiuye.flow;
 
 import com.wujiuye.flow.common.MetricBucket;
+import com.wujiuye.flow.common.MetricNode;
 import com.wujiuye.flow.common.WindowWrap;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 流量统计
@@ -95,5 +97,13 @@ public interface Flower {
      * @return
      */
     List<WindowWrap<MetricBucket>> windows();
+
+    /**
+     * 获取当前时间的前一秒/一分钟/一小时的指标数据
+     * (非线程安全)
+     *
+     * @return key: 时间戳，value：指标数据快照
+     */
+    Map<Long, MetricNode> lastMetrics();
 
 }
