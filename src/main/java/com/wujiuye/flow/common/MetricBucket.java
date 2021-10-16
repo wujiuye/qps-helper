@@ -14,11 +14,11 @@ public class MetricBucket {
     /**
      * 这段时间内的最小耗时
      */
-    private volatile long minRt = Integer.MAX_VALUE;
+    private volatile long minRt = Long.MAX_VALUE;
     /**
      * 这段时间内的最大耗时
      */
-    private volatile long maxRt = Integer.MIN_VALUE;
+    private volatile long maxRt = Long.MIN_VALUE;
 
     public MetricBucket() {
         // 初始化数组

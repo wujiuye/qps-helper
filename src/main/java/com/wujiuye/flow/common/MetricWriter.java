@@ -7,9 +7,8 @@ import java.io.FileOutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -144,7 +143,7 @@ public class MetricWriter {
                 list.add(file.getAbsolutePath());
             }
         }
-        list.sort(METRIC_FILE_NAME_CMP);
+        SortUtil.sort(list, METRIC_FILE_NAME_CMP);
         if (list.isEmpty()) {
             return baseDir + fileNameModel;
         }
@@ -198,7 +197,7 @@ public class MetricWriter {
                 list.add(file.getAbsolutePath());
             }
         }
-        list.sort(MetricWriter.METRIC_FILE_NAME_CMP);
+        SortUtil.sort(list, MetricWriter.METRIC_FILE_NAME_CMP);
         return list;
     }
 
@@ -252,8 +251,15 @@ public class MetricWriter {
         DateFormat fileNameDf = new SimpleDateFormat("yyyy-MM-dd");
         String lastDateStr = fileNameDf.format(lastDate);
         String dateStr = fileNameDf.format(date);
-        long lastDay = LocalDate.parse(lastDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd")).getDayOfMonth();
-        long newDay = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd")).getDayOfMonth();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        long lastDay = 0;
+        long newDay = 0;
+        try {
+            lastDay = sdf.parse(lastDateStr).getDate();
+            newDay = sdf.parse(dateStr).getDate();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return newDay > lastDay;
     }
 
