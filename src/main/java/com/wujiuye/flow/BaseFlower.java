@@ -2,6 +2,7 @@ package com.wujiuye.flow;
 
 import com.wujiuye.flow.common.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,8 +63,10 @@ public abstract class BaseFlower implements Flower {
      * @return
      */
     @Override
-    public long successAvg() {
-        return metric.success() / getWindowInterval(metric.getWindowInterval());
+    public float successAvg() {
+        float total = metric.success();
+        float windows = getWindowInterval(metric.getWindowInterval());
+        return total / windows;
     }
 
     /**

@@ -56,14 +56,15 @@ public class ArrayMetric implements Metric {
     public long minRt() {
         // 确保当前时间的bucket不为空
         data.currentWindow();
-        long rt = 0;
+        long rt = Long.MAX_VALUE;
         List<MetricBucket> list = data.values();
         for (MetricBucket window : list) {
-            if (window.minRt() < rt || rt == 0) {
-                rt = window.minRt();
+            long wrt = window.minRt();
+            if (wrt > 0 && wrt < rt) {
+                rt = wrt;
             }
         }
-        return Math.max(1, rt);
+        return rt == Long.MAX_VALUE ? 0 : rt;
     }
 
     @Override
@@ -77,7 +78,7 @@ public class ArrayMetric implements Metric {
                 rt = window.maxRt();
             }
         }
-        return Math.max(1, rt);
+        return rt;
     }
 
     @Override

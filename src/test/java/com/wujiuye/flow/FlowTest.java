@@ -17,7 +17,11 @@ public class FlowTest {
         // 注册需要收集指标数据的Flower
         MetricPersistencer.registerFlower("test-resource", flowHelper.getFlow(FlowType.Minute));
         new Thread(() -> {
+            int i = 0;
             while (!Thread.interrupted()) {
+                if (i++ >= 100) {
+                    break;
+                }
                 try {
                     Thread.sleep(1);
                     flowHelper.incrSuccess(1);
@@ -38,23 +42,23 @@ public class FlowTest {
                 System.out.println("最小请求耗时:" + flower.minRt());
                 System.out.println("平均请求成功数:" + flower.successAvg());
                 System.out.println("平均请求异常数:" + flower.exceptionAvg());
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 System.out.println();
                 List<WindowWrap<MetricBucket>> buckets = flower.windows();
                 for (WindowWrap<MetricBucket> bucket : buckets) {
                     System.out.print("开始时间戳：" + bucket.windowStart() + "\t");
                     System.out.print("成功数：" + bucket.value().success() + "\t");
                     System.out.print("失败数：" + bucket.value().exception() + "\t");
-                    System.out.print("平均耗时：" + (bucket.value().rt() / bucket.value().success()) + "\t");
-                    System.out.print("最大数：" + bucket.value().maxRt() + "\t");
-                    System.out.print("最小数：" + bucket.value().minRt() + "\t");
+                    System.out.print("平均耗时：" + (bucket.value().success() > 0 ? (bucket.value().rt() / bucket.value().success()) : 0) + "\t");
+                    System.out.print("最大耗时：" + bucket.value().maxRt() + "\t");
+                    System.out.print("最小耗时：" + bucket.value().minRt() + "\t");
                     System.out.println();
                 }
                 System.out.println("======================================================");
+                try {
+                    Thread.sleep(1000 * 60);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }).start();
         Thread.sleep(Integer.MAX_VALUE);

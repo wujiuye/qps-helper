@@ -61,7 +61,7 @@ public interface Flower {
      *
      * @return
      */
-    long successAvg();
+    float successAvg();
 
     /**
      * 平均耗时

@@ -40,6 +40,8 @@ public class MetricBucket {
     }
 
     public void reset() {
+        minRt = Long.MAX_VALUE;
+        maxRt = Long.MIN_VALUE;
         for (MetricEvent event : MetricEvent.values()) {
             counters[event.ordinal()].reset();
         }
