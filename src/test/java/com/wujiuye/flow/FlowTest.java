@@ -1,5 +1,6 @@
 package com.wujiuye.flow;
 
+import com.wujiuye.flow.common.MathUtil;
 import com.wujiuye.flow.common.MetricBucket;
 import com.wujiuye.flow.common.WindowWrap;
 
@@ -16,12 +17,8 @@ public class FlowTest {
         FlowHelper flowHelper = new FlowHelper(FlowType.Minute);
         // 注册需要收集指标数据的Flower
         MetricPersistencer.registerFlower("test-resource", flowHelper.getFlow(FlowType.Minute));
-        new Thread(() -> {
-            int i = 0;
-            while (!Thread.interrupted()) {
-                if (i++ >= 100) {
-                    break;
-                }
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 2 * 60 * 1000; i++) {
                 try {
                     Thread.sleep(1);
                     flowHelper.incrSuccess(1);
@@ -29,9 +26,9 @@ public class FlowTest {
                     e.printStackTrace();
                 }
             }
-        }).start();
-        new Thread(() -> {
-            while (!Thread.interrupted()) {
+        });
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 2 * 60; i++) {
                 System.out.println("======================================================");
                 Flower flower = flowHelper.getFlow(FlowType.Minute);
                 System.out.println("总请求数:" + flower.total());
@@ -48,20 +45,23 @@ public class FlowTest {
                     System.out.print("开始时间戳：" + bucket.windowStart() + "\t");
                     System.out.print("成功数：" + bucket.value().success() + "\t");
                     System.out.print("失败数：" + bucket.value().exception() + "\t");
-                    System.out.print("平均耗时：" + (bucket.value().success() > 0 ? (bucket.value().rt() / bucket.value().success()) : 0) + "\t");
+                    System.out.print("平均耗时：" + MathUtil.divide(bucket.value().rt(), bucket.value().success()) + "\t");
                     System.out.print("最大耗时：" + bucket.value().maxRt() + "\t");
                     System.out.print("最小耗时：" + bucket.value().minRt() + "\t");
                     System.out.println();
                 }
                 System.out.println("======================================================");
                 try {
-                    Thread.sleep(1000 * 10);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-        }).start();
-        Thread.sleep(Integer.MAX_VALUE);
+        });
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
     }
 
 }

@@ -106,7 +106,7 @@ public class ArrayMetric implements Metric {
             newBucket.setTimestamp(windowWrap.windowStart());
             newBucket.setSuccessCnt(windowWrap.value().success());
             newBucket.setExceptionCnt(windowWrap.value().exception());
-            newBucket.setAvgRt(windowWrap.value().rt() / windowWrap.value().success());
+            newBucket.setAvgRt(MathUtil.divide(windowWrap.value().rt(), windowWrap.value().success()));
             newBucket.setRt(windowWrap.value().rt());
             newBucket.setMinRt(windowWrap.value().minRt());
             newBucket.setMaxRt(windowWrap.value().maxRt());
