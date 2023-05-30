@@ -1,5 +1,6 @@
 package com.wujiuye.flow;
 
+import com.wujiuye.flow.common.MathUtil;
 import com.wujiuye.flow.common.MetricBucket;
 import com.wujiuye.flow.common.WindowWrap;
 
@@ -48,7 +49,7 @@ public class FlowTest {
                     System.out.print("开始时间戳：" + bucket.windowStart() + "\t");
                     System.out.print("成功数：" + bucket.value().success() + "\t");
                     System.out.print("失败数：" + bucket.value().exception() + "\t");
-                    System.out.print("平均耗时：" + (bucket.value().success() > 0 ? (bucket.value().rt() / bucket.value().success()) : 0) + "\t");
+                    System.out.print("平均耗时：" + MathUtil.divide(bucket.value().rt(), bucket.value().success()) + "\t");
                     System.out.print("最大耗时：" + bucket.value().maxRt() + "\t");
                     System.out.print("最小耗时：" + bucket.value().minRt() + "\t");
                     System.out.println();
@@ -61,7 +62,7 @@ public class FlowTest {
                 }
             }
         }).start();
-        Thread.sleep(Integer.MAX_VALUE);
+        Thread.sleep(2 * 60 * 1000);
     }
 
 }
