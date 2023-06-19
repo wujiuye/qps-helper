@@ -1,5 +1,7 @@
 package com.wujiuye.flow;
 
+import com.wujiuye.flow.flowers.*;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +21,12 @@ public class FlowHelper {
                 return new SecondFlower();
             case Hour:
                 return new HourFlower();
+            case FiveMinute:
+                return new FiveFlower();
+            case FifteenMinute:
+                return new FifteenFlower();
+            case ThirtyMinute:
+                return new ThirtyFlower();
             default:
                 throw new RuntimeException("not supor type!");
         }
@@ -32,6 +40,7 @@ public class FlowHelper {
             flowMap.put(type, flower);
         }
     }
+
 
     /**
      * 每接收一个请求将请求数自增1并添加耗时

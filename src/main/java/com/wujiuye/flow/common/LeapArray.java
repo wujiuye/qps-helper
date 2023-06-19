@@ -120,7 +120,7 @@ public abstract class LeapArray<T> {
             // 一搬是项目启动时，时间未到达一个周期，数组还没有存储满，没有到复用阶段，所以数组元素可能为空
             if (old == null) {
                 // 创建新的bucket，并创建一个bucket包装器
-                WindowWrap<T> window = new WindowWrap<T>(windowLengthInMs, windowStart, newEmptyBucket(timeMillis));
+                WindowWrap<T> window = new WindowWrap<>(windowLengthInMs, windowStart, newEmptyBucket(timeMillis));
                 // cas写入，确保线程安全，期望数组下标的元素是空的，否则就不写入，而是复用了
                 if (array.compareAndSet(idx, null, window)) {
                     return window;
@@ -225,10 +225,10 @@ public abstract class LeapArray<T> {
      */
     public List<T> values(long timeMillis) {
         if (timeMillis < 0) {
-            return new ArrayList<T>();
+            return new ArrayList<>();
         }
         int size = array.length();
-        List<T> result = new ArrayList<T>(size);
+        List<T> result = new ArrayList<>(size);
         // 从数组0开始遍历，只获取给定时间戳timeMillis往前的一个周期内的记录
         for (int i = 0; i < size; i++) {
             WindowWrap<T> windowWrap = array.get(i);

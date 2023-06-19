@@ -1,5 +1,6 @@
-package com.wujiuye.flow;
+package com.wujiuye.flow.flowers;
 
+import com.wujiuye.flow.BaseFlower;
 import com.wujiuye.flow.common.ArrayMetric;
 import com.wujiuye.flow.common.MetricNode;
 import com.wujiuye.flow.common.TimeUtil;
@@ -33,6 +34,8 @@ public class MinuteFlower extends BaseFlower {
         // 将毫秒转为秒
         return windowInterval / 1000;
     }
+
+
 
     @Override
     public Map<Long, MetricNode> lastMetrics() {

@@ -1,9 +1,12 @@
-package com.wujiuye.flow;
+package com.wujiuye.flow.flowers;
 
+import com.wujiuye.flow.BaseFlower;
 import com.wujiuye.flow.common.ArrayMetric;
+import com.wujiuye.flow.common.MetricBucket;
 import com.wujiuye.flow.common.MetricNode;
 
 import java.util.Map;
+import java.util.PriorityQueue;
 
 /**
  * 统计一秒钟的流量
@@ -19,10 +22,13 @@ public class SecondFlower extends BaseFlower {
         super(new ArrayMetric(5, 1000));
     }
 
+
+
     @Override
     protected long getWindowInterval(long windowInterval) {
         return windowInterval / 1000;
     }
+
 
     @Override
     public Map<Long, MetricNode> lastMetrics() {

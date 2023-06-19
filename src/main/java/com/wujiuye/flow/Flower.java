@@ -36,11 +36,30 @@ public interface Flower {
     }
 
     /**
+     * 当前请求失败率
+     *
+     * @return
+     */
+    default double failureRate() {
+        long successCount = totalSuccess();
+        long exception = totalException();
+        return (double) exception / (successCount + exception);
+    }
+
+    /**
      * 成功总数
      *
      * @return
      */
     long totalSuccess();
+
+    /**
+     * 均值 95线
+     * 为了节约内存和相当于每个采样的平局值求 95线
+     *
+     * @return
+     */
+    long avgRt95();
 
     /**
      * 异常总数
