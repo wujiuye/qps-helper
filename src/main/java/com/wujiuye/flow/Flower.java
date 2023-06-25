@@ -54,8 +54,8 @@ public interface Flower {
     long totalSuccess();
 
     /**
-     * 均值 95线
-     * 为了节约内存和相当于每个采样的平局值求 95线
+     * 均值线
+     * 为了节约内存和相当于每个采样的平局值求
      *
      * @return
      */
