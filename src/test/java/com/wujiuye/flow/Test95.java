@@ -1,11 +1,5 @@
 package com.wujiuye.flow;
 
-import com.wujiuye.flow.common.MathUtil;
-import com.wujiuye.flow.common.MetricBucket;
-import com.wujiuye.flow.common.WindowWrap;
-import org.junit.Test;
-
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -45,8 +39,8 @@ public class Test95 {
                 System.out.println("最小请求耗时:" + flower.minRt());
                 System.out.println("成功请求数:" + flower.totalSuccess());
                 System.out.println("失败请求数:" + flower.totalException());
-//                System.out.println("平均请求异常数:" + flower.exceptionAvg());
-                System.out.println("95线:" + flower.avgRt95());
+                System.out.println("平均请求异常数:" + flower.exceptionAvg());
+                System.out.println("99线:" + flower.avgRtProp(PropType.PROP_99));
                 System.out.println();
 //                List<WindowWrap<MetricBucket>> buckets = flower.windows();
 //                for (WindowWrap<MetricBucket> bucket : buckets) {

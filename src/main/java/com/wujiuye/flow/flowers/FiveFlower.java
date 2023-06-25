@@ -20,7 +20,7 @@ public class FiveFlower extends BaseFlower {
         /**
          * 最近15分钟的统计信息，将15分钟为每3000毫秒统计一次，样本数为100
          */
-        super(new ArrayMetric(100, 5 * 60 * 1000));
+        super(new ArrayMetric(300, 5 * 60 * 1000));
     }
 
 

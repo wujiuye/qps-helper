@@ -20,7 +20,7 @@ public class ThirtyFlower extends BaseFlower {
         /**
          * 最近30分钟的统计信息，将15分钟为每3600毫秒统计一次，样本数为500
          */
-        super(new ArrayMetric(500, 30 * 60 * 1000));
+        super(new ArrayMetric(600, 30 * 60 * 1000));
     }
 
 

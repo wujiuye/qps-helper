@@ -28,7 +28,7 @@ public abstract class BaseFlower implements Flower {
     }
 
     @Override
-    public long avgRt95() {
+    public long avgRtProp(PropType prop) {
         MetricBucket[] buckets = this.buckets();
         long[] avgRts = new long[buckets.length];
         MetricBucket bucket;
@@ -38,7 +38,7 @@ public abstract class BaseFlower implements Flower {
         }
         Arrays.sort(avgRts);
         // 抽样，以bucket的 95% avgRt 作为 95线
-        int index = (int) Math.round((float) buckets.length * 0.95) - 1;
+        int index = (int) Math.round((float) buckets.length * prop.proportion) - 1;
         return avgRts[index];
     }
 

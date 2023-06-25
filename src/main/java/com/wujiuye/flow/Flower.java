@@ -43,7 +43,7 @@ public interface Flower {
     default double failureRate() {
         long successCount = totalSuccess();
         long exception = totalException();
-        return (double) exception / (successCount + exception);
+        return (double) exception / Math.max(1, (successCount + exception));
     }
 
     /**
@@ -59,7 +59,7 @@ public interface Flower {
      *
      * @return
      */
-    long avgRt95();
+    long avgRtProp(PropType prop);
 
     /**
      * 异常总数
