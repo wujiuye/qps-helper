@@ -1,4 +1,9 @@
 # qps-helper
+[![Maven central](https://maven-badges.herokuapp.com/maven-central/com.github.wujiuye/qps-helper/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.wujiuye/qps-helper)
+[![License](http://img.shields.io/:license-apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+
+* [版本更新历史](https://github.com/wujiuye/qps-helper/releases)
+
 通用的qps、tps统计工具包
 
 ### 添加依赖配置
