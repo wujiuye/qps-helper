@@ -3,8 +3,7 @@ package com.wujiuye.flow;
 import com.wujiuye.flow.common.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 流量统计基类
@@ -26,6 +25,21 @@ public abstract class BaseFlower implements Flower {
     public void incrSuccess(long rt) {
         metric.addSuccess(1);
         metric.addRt(rt);
+    }
+
+    @Override
+    public long avgRtProp(PropType prop) {
+        MetricBucket[] buckets = this.buckets();
+        long[] avgRts = new long[buckets.length];
+        MetricBucket bucket;
+        for (int i = 0; i < buckets.length; i++) {
+            bucket = buckets[i];
+            avgRts[i] = bucket.rt() / (bucket.success() > 0 ? bucket.success() : 1);
+        }
+        Arrays.sort(avgRts);
+        // 抽样，以bucket的 95% avgRt 作为 95线
+        int index = (int) Math.round((float) buckets.length * prop.proportion) - 1;
+        return avgRts[index];
     }
 
     @Override
@@ -90,6 +104,7 @@ public abstract class BaseFlower implements Flower {
         }
         return metric.rt() / successCount;
     }
+
 
     @Override
     public long minRt() {
